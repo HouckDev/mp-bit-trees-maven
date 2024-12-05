@@ -205,7 +205,18 @@ public class BrailleAsciiTables {
    *
    */
   public static String toBraille(char letter) {
-    return "";  // STUB
+    // Make sure we've loaded the braille-to-ASCII tree.
+    if (null == a2bTree) {
+      a2bTree = new BitTree(6);
+      InputStream a2bStream = new ByteArrayInputStream(a2b.getBytes());
+      a2bTree.load(a2bStream);
+      try {
+        a2bStream.close();
+      } catch (IOException e) {
+        // We don't care if we can't close the stream.
+      } // try/catch
+    } // if
+    return a2bTree.get(Integer.toString((int) letter));
   } // toBraille(char)
 
   /**
@@ -223,13 +234,24 @@ public class BrailleAsciiTables {
         // We don't care if we can't close the stream.
       } // try/catch
     } // if
-    return "";  // STUB
+    return b2aTree.get(bits);
   } // toAscii(String)
 
   /**
    *
    */
   public static String toUnicode(String bits) {
-    return "";  // STUB
+    // Make sure we've loaded the braille-to-ASCII tree.
+    if (null == b2uTree) {
+      b2uTree = new BitTree(6);
+      InputStream b2uStream = new ByteArrayInputStream(b2u.getBytes());
+      b2uTree.load(b2uStream);
+      try {
+        b2uStream.close();
+      } catch (IOException e) {
+        // We don't care if we can't close the stream.
+      } // try/catch
+    } // if
+    return new String(Character.toChars(b2uTree.get(bits).charAt(0)));
   } // toUnicode(String)
 } // BrailleAsciiTables
